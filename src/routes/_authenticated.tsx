@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
   SidebarProvider,
@@ -173,6 +173,3 @@ function AuthenticatedLayout() {
   );
 }
 
-// re-export for type-only awareness
-export { useAuth };
-useEffect; // avoid unused
