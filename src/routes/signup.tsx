@@ -4,13 +4,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Scale } from "lucide-react";
 
 export const Route = createFileRoute("/signup")({
   head: () => ({
-    meta: [{ title: "Create account — Trademark Management" }],
+    meta: [
+      { title: "Create your Trademark MS account" },
+      { name: "description", content: "Create an internal team account to access the Trademark MS workspace for managing IP cases, payments, agents and Drive folders." },
+      { property: "og:title", content: "Create your Trademark MS account" },
+      { property: "og:description", content: "Internal team account signup for the Trademark MS IP case management workspace." },
+      { property: "og:url", content: "https://brandxv1.lovable.app/signup" },
+    ],
+    links: [{ rel: "canonical", href: "https://brandxv1.lovable.app/signup" }],
   }),
   component: SignupPage,
 });
