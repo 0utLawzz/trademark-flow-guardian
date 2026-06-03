@@ -1,0 +1,10 @@
+# Trademark MS
+
+> Internal workspace for an intellectual property firm to manage trademark, NTN, copyright and company cases — phases, payments, agent assignments, and Google Drive folders in one place.
+
+Trademark MS is a private team tool. All case data, clients, payments and reports require an internal team account. Public pages are limited to the marketing entry and authentication.
+
+## Pages
+
+- [Sign in](/login): Internal team sign-in page.
+- [Create account](/signup): Internal team account creation.

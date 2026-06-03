@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /clients
+Disallow: /trademark
+Disallow: /ntn
+Disallow: /copyright
+Disallow: /company
+Disallow: /agents
+Disallow: /assignments
+Disallow: /payments
+Disallow: /reports
+Disallow: /settings
+
+Sitemap: https://brandxv1.lovable.app/sitemap.xml

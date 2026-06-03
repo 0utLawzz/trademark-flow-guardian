@@ -4,13 +4,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Scale } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
-    meta: [{ title: "Sign in — Trademark Management" }],
+    meta: [
+      { title: "Sign in to Trademark MS — IP case management" },
+      { name: "description", content: "Sign in to the Trademark MS internal workspace to manage clients, trademark, NTN, copyright and company cases." },
+      { property: "og:title", content: "Sign in to Trademark MS" },
+      { property: "og:description", content: "Internal team sign-in for the Trademark MS IP case management workspace." },
+      { property: "og:url", content: "https://brandxv1.lovable.app/login" },
+    ],
+    links: [{ rel: "canonical", href: "https://brandxv1.lovable.app/login" }],
   }),
   component: LoginPage,
 });
@@ -44,7 +51,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-background via-secondary/40 to-background px-4">
+    <main className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-background via-secondary/40 to-background px-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -57,7 +64,7 @@ function LoginPage() {
         </div>
         <Card className="border-border/60 shadow-sm">
           <CardHeader>
-            <CardTitle className="font-display">Welcome back</CardTitle>
+            <h1 className="font-display text-2xl font-semibold leading-none tracking-tight">Welcome back</h1>
             <CardDescription>Sign in to manage clients, cases and trademarks.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -80,6 +87,6 @@ function LoginPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </main>
   );
 }
