@@ -10,7 +10,14 @@ import { Scale } from "lucide-react";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
-    meta: [{ title: "Sign in — Trademark Management" }],
+    meta: [
+      { title: "Sign in to Trademark MS — IP case management" },
+      { name: "description", content: "Sign in to the Trademark MS internal workspace to manage clients, trademark, NTN, copyright and company cases." },
+      { property: "og:title", content: "Sign in to Trademark MS" },
+      { property: "og:description", content: "Internal team sign-in for the Trademark MS IP case management workspace." },
+      { property: "og:url", content: "https://brandxv1.lovable.app/login" },
+    ],
+    links: [{ rel: "canonical", href: "https://brandxv1.lovable.app/login" }],
   }),
   component: LoginPage,
 });
