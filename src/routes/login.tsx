@@ -51,7 +51,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-background via-secondary/40 to-background px-4">
+    <main className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-background via-secondary/40 to-background px-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -64,7 +64,7 @@ function LoginPage() {
         </div>
         <Card className="border-border/60 shadow-sm">
           <CardHeader>
-            <CardTitle className="font-display">Welcome back</CardTitle>
+            <h1 className="font-display text-2xl font-semibold leading-none tracking-tight">Welcome back</h1>
             <CardDescription>Sign in to manage clients, cases and trademarks.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -87,6 +87,6 @@ function LoginPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </main>
   );
 }
