@@ -46,7 +46,7 @@ function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-background via-secondary/40 to-background px-4">
+    <main className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-background via-secondary/40 to-background px-4">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -59,7 +59,7 @@ function SignupPage() {
         </div>
         <Card className="border-border/60 shadow-sm">
           <CardHeader>
-            <CardTitle className="font-display">Create your account</CardTitle>
+            <h1 className="font-display text-2xl font-semibold leading-none tracking-tight">Create your account</h1>
             <CardDescription>Internal team access only.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -83,6 +83,6 @@ function SignupPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </main>
   );
 }
