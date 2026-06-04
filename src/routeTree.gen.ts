@@ -17,10 +17,18 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
+import { Route as AuthenticatedLookupRouteImport } from './routes/_authenticated/lookup'
+import { Route as AuthenticatedJournalRouteImport } from './routes/_authenticated/journal'
+import { Route as AuthenticatedIpoRouteImport } from './routes/_authenticated/ipo'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedAssignmentsRouteImport } from './routes/_authenticated/assignments'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
+import { Route as AuthenticatedApplicationsTrademarkRouteImport } from './routes/_authenticated/applications.trademark'
+import { Route as AuthenticatedApplicationsNtnRouteImport } from './routes/_authenticated/applications.ntn'
+import { Route as AuthenticatedApplicationsCopyrightRouteImport } from './routes/_authenticated/applications.copyright'
+import { Route as AuthenticatedApplicationsCompanyRouteImport } from './routes/_authenticated/applications.company'
+import { Route as AuthenticatedApplicationsIdRouteImport } from './routes/_authenticated/applications.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -61,6 +69,21 @@ const AuthenticatedPaymentsRoute = AuthenticatedPaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedLookupRoute = AuthenticatedLookupRouteImport.update({
+  id: '/lookup',
+  path: '/lookup',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedJournalRoute = AuthenticatedJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedIpoRoute = AuthenticatedIpoRouteImport.update({
+  id: '/ipo',
+  path: '/ipo',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -82,6 +105,36 @@ const AuthenticatedAgentsRoute = AuthenticatedAgentsRouteImport.update({
   path: '/agents',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedApplicationsTrademarkRoute =
+  AuthenticatedApplicationsTrademarkRouteImport.update({
+    id: '/applications/trademark',
+    path: '/applications/trademark',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedApplicationsNtnRoute =
+  AuthenticatedApplicationsNtnRouteImport.update({
+    id: '/applications/ntn',
+    path: '/applications/ntn',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedApplicationsCopyrightRoute =
+  AuthenticatedApplicationsCopyrightRouteImport.update({
+    id: '/applications/copyright',
+    path: '/applications/copyright',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedApplicationsCompanyRoute =
+  AuthenticatedApplicationsCompanyRouteImport.update({
+    id: '/applications/company',
+    path: '/applications/company',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedApplicationsIdRoute =
+  AuthenticatedApplicationsIdRouteImport.update({
+    id: '/applications/$id',
+    path: '/applications/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -92,9 +145,17 @@ export interface FileRoutesByFullPath {
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/ipo': typeof AuthenticatedIpoRoute
+  '/journal': typeof AuthenticatedJournalRoute
+  '/lookup': typeof AuthenticatedLookupRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/applications/$id': typeof AuthenticatedApplicationsIdRoute
+  '/applications/company': typeof AuthenticatedApplicationsCompanyRoute
+  '/applications/copyright': typeof AuthenticatedApplicationsCopyrightRoute
+  '/applications/ntn': typeof AuthenticatedApplicationsNtnRoute
+  '/applications/trademark': typeof AuthenticatedApplicationsTrademarkRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -105,9 +166,17 @@ export interface FileRoutesByTo {
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/clients': typeof AuthenticatedClientsRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/ipo': typeof AuthenticatedIpoRoute
+  '/journal': typeof AuthenticatedJournalRoute
+  '/lookup': typeof AuthenticatedLookupRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/applications/$id': typeof AuthenticatedApplicationsIdRoute
+  '/applications/company': typeof AuthenticatedApplicationsCompanyRoute
+  '/applications/copyright': typeof AuthenticatedApplicationsCopyrightRoute
+  '/applications/ntn': typeof AuthenticatedApplicationsNtnRoute
+  '/applications/trademark': typeof AuthenticatedApplicationsTrademarkRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -120,9 +189,17 @@ export interface FileRoutesById {
   '/_authenticated/assignments': typeof AuthenticatedAssignmentsRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/ipo': typeof AuthenticatedIpoRoute
+  '/_authenticated/journal': typeof AuthenticatedJournalRoute
+  '/_authenticated/lookup': typeof AuthenticatedLookupRoute
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/applications/$id': typeof AuthenticatedApplicationsIdRoute
+  '/_authenticated/applications/company': typeof AuthenticatedApplicationsCompanyRoute
+  '/_authenticated/applications/copyright': typeof AuthenticatedApplicationsCopyrightRoute
+  '/_authenticated/applications/ntn': typeof AuthenticatedApplicationsNtnRoute
+  '/_authenticated/applications/trademark': typeof AuthenticatedApplicationsTrademarkRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -135,9 +212,17 @@ export interface FileRouteTypes {
     | '/assignments'
     | '/clients'
     | '/dashboard'
+    | '/ipo'
+    | '/journal'
+    | '/lookup'
     | '/payments'
     | '/reports'
     | '/settings'
+    | '/applications/$id'
+    | '/applications/company'
+    | '/applications/copyright'
+    | '/applications/ntn'
+    | '/applications/trademark'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -148,9 +233,17 @@ export interface FileRouteTypes {
     | '/assignments'
     | '/clients'
     | '/dashboard'
+    | '/ipo'
+    | '/journal'
+    | '/lookup'
     | '/payments'
     | '/reports'
     | '/settings'
+    | '/applications/$id'
+    | '/applications/company'
+    | '/applications/copyright'
+    | '/applications/ntn'
+    | '/applications/trademark'
   id:
     | '__root__'
     | '/'
@@ -162,9 +255,17 @@ export interface FileRouteTypes {
     | '/_authenticated/assignments'
     | '/_authenticated/clients'
     | '/_authenticated/dashboard'
+    | '/_authenticated/ipo'
+    | '/_authenticated/journal'
+    | '/_authenticated/lookup'
     | '/_authenticated/payments'
     | '/_authenticated/reports'
     | '/_authenticated/settings'
+    | '/_authenticated/applications/$id'
+    | '/_authenticated/applications/company'
+    | '/_authenticated/applications/copyright'
+    | '/_authenticated/applications/ntn'
+    | '/_authenticated/applications/trademark'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -233,6 +334,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPaymentsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/lookup': {
+      id: '/_authenticated/lookup'
+      path: '/lookup'
+      fullPath: '/lookup'
+      preLoaderRoute: typeof AuthenticatedLookupRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/journal': {
+      id: '/_authenticated/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof AuthenticatedJournalRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/ipo': {
+      id: '/_authenticated/ipo'
+      path: '/ipo'
+      fullPath: '/ipo'
+      preLoaderRoute: typeof AuthenticatedIpoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -261,6 +383,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAgentsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/applications/trademark': {
+      id: '/_authenticated/applications/trademark'
+      path: '/applications/trademark'
+      fullPath: '/applications/trademark'
+      preLoaderRoute: typeof AuthenticatedApplicationsTrademarkRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/applications/ntn': {
+      id: '/_authenticated/applications/ntn'
+      path: '/applications/ntn'
+      fullPath: '/applications/ntn'
+      preLoaderRoute: typeof AuthenticatedApplicationsNtnRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/applications/copyright': {
+      id: '/_authenticated/applications/copyright'
+      path: '/applications/copyright'
+      fullPath: '/applications/copyright'
+      preLoaderRoute: typeof AuthenticatedApplicationsCopyrightRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/applications/company': {
+      id: '/_authenticated/applications/company'
+      path: '/applications/company'
+      fullPath: '/applications/company'
+      preLoaderRoute: typeof AuthenticatedApplicationsCompanyRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/applications/$id': {
+      id: '/_authenticated/applications/$id'
+      path: '/applications/$id'
+      fullPath: '/applications/$id'
+      preLoaderRoute: typeof AuthenticatedApplicationsIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -269,9 +426,17 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAssignmentsRoute: typeof AuthenticatedAssignmentsRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedIpoRoute: typeof AuthenticatedIpoRoute
+  AuthenticatedJournalRoute: typeof AuthenticatedJournalRoute
+  AuthenticatedLookupRoute: typeof AuthenticatedLookupRoute
   AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedApplicationsIdRoute: typeof AuthenticatedApplicationsIdRoute
+  AuthenticatedApplicationsCompanyRoute: typeof AuthenticatedApplicationsCompanyRoute
+  AuthenticatedApplicationsCopyrightRoute: typeof AuthenticatedApplicationsCopyrightRoute
+  AuthenticatedApplicationsNtnRoute: typeof AuthenticatedApplicationsNtnRoute
+  AuthenticatedApplicationsTrademarkRoute: typeof AuthenticatedApplicationsTrademarkRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -279,9 +444,19 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAssignmentsRoute: AuthenticatedAssignmentsRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedIpoRoute: AuthenticatedIpoRoute,
+  AuthenticatedJournalRoute: AuthenticatedJournalRoute,
+  AuthenticatedLookupRoute: AuthenticatedLookupRoute,
   AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedApplicationsIdRoute: AuthenticatedApplicationsIdRoute,
+  AuthenticatedApplicationsCompanyRoute: AuthenticatedApplicationsCompanyRoute,
+  AuthenticatedApplicationsCopyrightRoute:
+    AuthenticatedApplicationsCopyrightRoute,
+  AuthenticatedApplicationsNtnRoute: AuthenticatedApplicationsNtnRoute,
+  AuthenticatedApplicationsTrademarkRoute:
+    AuthenticatedApplicationsTrademarkRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -298,13 +473,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
