@@ -1,104 +1,156 @@
 
-# Trademark Management System — Build Plan
+# Restructure: New schema + new navigation
 
-A full internal admin tool for an IP firm to manage Trademark, NTN, Copyright, and Company cases — with phase tracking, payments, agent assignments, search, and Google Drive folder automation.
+## 1. Database migration (destructive)
 
-## 1. Stack & infrastructure
+Drop the old business tables and replace with the new schema. The current tables (`clients`, `cases`, `trademarks`, `case_phases`, `payments`, `agents`, `assignments`, `ntn_details`, `copyright_details`, `company_details`, `drive_folders`) are empty scaffolding, so we'll drop and rebuild rather than migrate.
 
-- **Frontend:** TanStack Start (existing template), Tailwind, shadcn/ui, dashboard layout with collapsible sidebar.
-- **Backend:** Lovable Cloud (Supabase) — Postgres + Auth + RLS. All reads/writes via `createServerFn` with `requireSupabaseAuth`.
-- **Auth:** Email/password (Lovable Cloud). Single internal team — any signed-in user has full access. `/login`, `/signup`, `/_authenticated` layout guard.
-- **Google Drive:** App-user OAuth connector (per-user). User connects their Drive once from Settings; the app auto-creates client + case folders and stores `folder_id` + link on the case.
-- **Theme:** Emerald Prestige palette (#064e3b, #0d7a5f, #c9a84c, #f5f0e0) + Outfit (headings) / Figtree (body) — wired into `src/styles.css` as oklch tokens.
+Keep: `user_drive_connections`, auth, helpers.
 
-## 2. Database schema (migrations)
+### New tables
 
-Tables, all with RLS enabled, GRANT to `authenticated`, policies allowing any authenticated user to CRUD (internal team model):
+**clients**
+- `id` uuid PK
+- `client_prefix` text (`X`, `A`, `N`, …)
+- `client_code` int (e.g. 202)
+- `client_name`, `trading_as`, `address`, `city` text
+- unique (`client_prefix`, `client_code`)
+- timestamps
 
-- `clients` — `id, client_code (unique), client_name, phone, email, timestamps`
-- `cases` — `id, client_id (fk), case_type (enum: trademark|ntn|copyright|company), case_number, status, timestamps`
-- `trademarks` — `id, case_id (fk unique), application_name, application_address, application_class, applicant_name, trading_as, applicant_address, trademark_number, folder_number, google_drive_link, assigning_type, current_phase (1–4), timestamps`
-- `ntn_details`, `copyright_details`, `company_details` — type-specific detail tables (stub fields per spec; expand later)
-- `case_phases` — `id, case_id, phase_number, phase_status, payment_clear, remarks, started_at, completed_at, updated_at`
-- `agents` — `id, agent_name, phone, notes`
-- `assignments` — `id, case_id, agent_id, assigned_date, completion_date, status, remarks`
-- `payments` — `id, case_id, phase_number, payment_required, payment_clear, amount, payment_date, remarks`
-- `drive_folders` — `id, case_id, folder_number, folder_name, google_drive_folder_id, google_drive_link, created_at`
-- `user_drive_connections` — `id, user_id (fk auth.users), connection_id, created_at` (stores per-user Google Drive connectionId)
+**attorneys**
+- `id`, `name`, `address`, `city`, `created_at`
 
-Indexes: `trademarks.trademark_number`, `trademarks.application_name`, `clients.client_code`, `cases.case_number`, `trademarks.applicant_name`.
+**applications** (core)
+- `id` uuid PK
+- `folder_number` text unique — auto-generated `{prefix}-{client_code}-{seq}` e.g. `X-202-010` (seq = per-client running number, padded 3)
+- `trademark_number` text nullable (6 digits, added later)
+- `client_id` → clients
+- `service_type` text default `Trademark` (also supports `Copyright`, `Company`, `NTN`)
+- `application_name`, `mark_description` text
+- `applicant_type` text (`Sole Proprietor` | `Company` | `Partners`)
+- `applicant_name`, `trading_as`, `applicant_address` text
+- `class` text[] (array of class numbers as strings)
+- `logo_url` text
+- `attorney_id` → attorneys nullable
+- `city` text (LHR, KHI, ISB, PES)
+- `current_stage` int 1–4 default 1, CHECK 1..4
+- `sub_status` text
+- `is_complete` bool default false
+- `last_operation_date` timestamptz (denormalized for lookup speed; updated by trigger on stage_updates insert)
+- timestamps
+- indexes: `folder_number`, `trademark_number`, `client_id`, `current_stage`
 
-Status options stored as a TypeScript config file (`src/config/phase-statuses.ts`) — not hardcoded in components.
+**stage_updates** (history, append-only)
+- `id`, `application_id` → applications (cascade)
+- `stage` int 1–4
+- `status` text
+- `update_date` timestamptz default now
+- `file_url`, `notes` text
+- `hearing_date` timestamptz nullable
+- `journal_no` text nullable
+- `tcs_tracking` text nullable
+- `created_by` text
+- trigger: after insert → update `applications.last_operation_date`, `current_stage` (only if new stage > current), `sub_status`
 
-## 3. Server functions
+**stage_payments**
+- `id`, `application_id`, `stage` 1–4
+- `payment_status` text (`Due`|`Received`|`Balance`)
+- `amount` numeric nullable
+- `payment_date` timestamptz nullable
+- `notes` text
+- unique (`application_id`, `stage`)
 
-`src/lib/*.functions.ts` modules:
+**assignments**
+- `id`, `application_id`, `agent_name`, `city`, `assigned_date`, `status` (`Pending`|`Accepted`|`Rejected`|`Cleared`), `notes`
 
-- `clients.functions.ts` — list / get / create / update / delete clients; auto-generate `client_code` (e.g. X726) if not provided
-- `cases.functions.ts` — list cases (filter by client/type/status), create case, update status
-- `trademarks.functions.ts` — create/update trademark detail, advance phase (validates payment clearance), update phase status
-- `agents.functions.ts` & `assignments.functions.ts` — CRUD + assign agent to case
-- `payments.functions.ts` — record payment, mark clear
-- `search.functions.ts` — unified search across trademark_number / application_name / client_code / case_number / applicant_name / trading_as
-- `drive.functions.ts` — start Google OAuth, persist connection, create client folder, create case folder under client folder, list folders
-- `reports.functions.ts` — dashboard counts (cases per phase, pending payments, recent activity)
+**journal_entries** (manual log)
+- `id`, `journal_no` text, `journal_date` date, `trademark_number` text, `application_name` text, `class` text, `notes` text, timestamps
+- index on `trademark_number`
 
-## 4. Google Drive integration
+**ipo_entries** (manual log)
+- `id`, `entry_date` date, `trademark_number` text, `application_name` text, `class` text, `status` text, `notes` text, timestamps
+- index on `trademark_number`
 
-- Add `src/integrations/lovable/appUserConnector.ts` + `appUserConnectorClient.ts` (per template).
-- Settings page → "Connect Google Drive" button → popup OAuth via Lovable connector gateway (`connectorId: "google"`, Drive scope).
-- After connect, store `connectionId` against user.
-- Folder workflow: when creating a client → create root folder named after `client_code`. When creating a case → either select an existing subfolder or create new one named like `X726-001 ABC SHOES TM678668 C25`. Both via Drive API through `callAsAppUser`.
-- Requires user-provided `GOOGLE_APP_USER_CONNECTOR_CLIENT_ID` secret (will request after build via add_secret).
+### Helper functions
+- `generate_folder_number(client_id uuid)` returns text — looks up prefix+code, finds max seq for that client, returns `{prefix}-{code}-{seq+1:03}`
+- Trigger on `stage_updates` insert to bump `applications.current_stage` forward only and refresh `last_operation_date` + `sub_status`
+- Guard trigger on `applications` update: reject if new `current_stage` < old `current_stage`
 
-## 5. Routes / UI
+### Stage / sub-status reference (config file `src/config/stages.ts`)
+- Stage 1 Filing: Filing Application, Documents Submitted, Examination (R), Under Examination, Examination Replied, Acknowledged, Completed
+- Stage 2 Examination & Acceptance: Under Examination, Hearing, Accepted, Rejected, Completed
+- Stage 3 Publication & Demand Note: Journal Published, Opposition Received, Opposition Replied, Demand Note (I), Demand Note Submitted, Completed
+- Stage 4 Certificate & Dispatch: Certificate (I), Certificate Received, Certificate Dispatched (TCS), Delivered, Completed
+- Payment per stage required to advance, **manual override** allowed (UI checkbox)
 
-Dashboard shell: top header (search bar + user menu) + collapsible left sidebar.
+### RLS
+Same internal-team model: all authenticated users full access on every business table. `user_drive_connections` stays user-scoped.
 
-Sidebar items: Dashboard, Clients, Trademark, NTN, Copyright, Company, Agents, Assignments, Payments, Reports, Settings.
+## 2. Server functions
+Rewrite/add under `src/lib/`:
+- `clients.functions.ts` — list/create/update; create returns id
+- `attorneys.functions.ts` — list/create
+- `applications.functions.ts` — list (filter by service_type), get by id, create (calls `generate_folder_number`), update, set trademark number, complete
+- `stage-updates.functions.ts` — list by app, add new (auto-advances application via trigger)
+- `stage-payments.functions.ts` — upsert per stage
+- `assignments.functions.ts` — list/create/update
+- `lookup.functions.ts` — search by trademark_number → returns minimal payload (folder no, date, name, class, address, status, sub_status, last_operation_date)
+- `journal.functions.ts`, `ipo.functions.ts` — list/create/delete; helper `getJournalMatches()` returns app ids whose `trademark_number` appears in journal/ipo (used for alert indicator on app list)
 
-Public routes:
-- `/login`, `/signup`
+## 3. Navigation / routes
 
-Protected routes under `_authenticated`:
-- `/` — dashboard: KPIs (open cases, phase distribution, pending payments, recent activity), quick search
-- `/clients` — list + create; `/clients/$clientId` — client detail with their cases
-- `/trademark` — table of trademark cases (searchable, filterable by phase/status)
-- `/trademark/new` — create wizard (client → case → trademark details → Drive folder → start phase 1)
-- `/trademark/$caseId` — **the core page** with the spec's layout:
-  - Top: client code, trademark number, application name, current phase, current status
-  - Middle: 4-phase timeline (Filed → Examination → Published → Certificate) with status updates, "Advance phase" button gated by payment clearance
-  - Right: Drive folder card, documents, assigned agent, payment status
-- `/ntn`, `/copyright`, `/company` — analogous list + detail (lighter, type-specific fields)
-- `/agents`, `/assignments`, `/payments`, `/reports`
-- `/settings` — Drive connection, profile
+Sidebar order:
+1. Dashboard
+2. Clients
+3. **Applications** (collapsible group)
+   - Trademark
+   - Copyright
+   - Company
+   - NTN / Tax Return
+4. Operations group:
+   - Agents
+   - Assignments
+   - Payments
+   - Reports
+5. Tools:
+   - Application Lookup
+   - Journal
+   - IPO
+6. Settings
 
-Global search (cmd-K palette) hits `search.functions.ts`.
+Routes to add/replace under `_authenticated/`:
+- `applications.trademark.tsx`, `applications.copyright.tsx`, `applications.company.tsx`, `applications.ntn.tsx` (list pages filtered by service_type with create button + table)
+- `applications.$id.tsx` — detail page with stage timeline, sub_status dropdown, payment per stage, file uploads, assignments side panel
+- `lookup.tsx` — single search input → result card
+- `journal.tsx`, `ipo.tsx` — table + add-row dialog, highlight rows whose trademark_number matches an open application
 
-## 6. Design tokens
+Remove/replace old `trademark.tsx`, `ntn.tsx`, `copyright.tsx`, `company.tsx` stubs.
 
-`src/styles.css`:
-- `--background: oklch(0.98 0.01 95)` (warm cream-tinted)
-- `--foreground: oklch(0.22 0.05 160)` (deep emerald-black)
-- `--primary: oklch(0.32 0.08 160)` (#064e3b emerald)
-- `--accent: oklch(0.72 0.12 85)` (#c9a84c gold)
-- `--card: oklch(0.99 0.005 95)`
-- Outfit / Figtree loaded from Google Fonts in `__root.tsx` head.
+Sidebar component updated to render the Applications group as a collapsible submenu using shadcn's `SidebarMenuSub`.
 
-## 7. Build order
+## 4. UI specifics
 
-1. Enable Lovable Cloud + email auth + write all schema migrations with RLS/GRANTs
-2. Apply Emerald Prestige theme tokens + fonts
-3. Auth (login/signup, `_authenticated` layout, bearer attacher)
-4. Dashboard shell (sidebar + header + cmd-K search)
-5. Clients module (CRUD + auto code)
-6. Cases + Trademark module (full create wizard + detail page with phase timeline)
-7. Payments + Agents + Assignments
-8. NTN / Copyright / Company stubs
-9. Reports dashboard
-10. Google Drive connector + folder automation (requests `GOOGLE_APP_USER_CONNECTOR_CLIENT_ID` secret)
-11. Seed a couple of demo records for verification
+- **Application list (per service type)**: table with folder_number, trademark_number, applicant_name, class, current_stage badge, sub_status, last_operation_date, journal/ipo alert dot. Filters: stage, complete/open, text search.
+- **Application detail**: header (folder + trademark + applicant + class + city), 4-step stage stepper with "Advance to next stage" gated by payment of current stage (override checkbox), stage_updates timeline (add update form: stage/status/date/file/notes/hearing/journal/tcs), payments grid (4 rows, edit each), assignments list.
+- **Lookup**: one input (trademark_number), result shows: folder_number, application_name, applicant_name, class, applicant_address, current stage label, sub_status, last_operation_date. Empty state + not-found state.
+- **Journal / IPO**: simple table + add dialog. Each row whose `trademark_number` matches an active application gets a gold accent + bell icon.
 
-## 8. Out of scope (future, per spec §25)
+## 5. Build order
 
-WhatsApp/email reminders, invoice/PDF generation, activity logs, multi-user permissions/roles, IPO automation. Schema leaves room to add later without migration breakage.
+1. Migration: drop old tables, create new schema, helpers, triggers, RLS, GRANTs
+2. Config file `src/config/stages.ts` (stages + sub_status options + service types + cities)
+3. Server functions for clients/attorneys/applications/stage_updates/stage_payments/assignments/lookup/journal/ipo
+4. Sidebar restructure (Applications submenu, Tools group)
+5. Clients page (list + create dialog)
+6. Application list pages × 4 (shared component, parametrized by service_type)
+7. Application detail page (the big one)
+8. Lookup page
+9. Journal + IPO pages with match-highlighting
+10. Wipe dashboard KPIs to point at new tables
+
+## 6. Out of scope this round
+Google Drive folder automation hookup (schema removed but can re-add later), reports analytics charts, file upload storage bucket (we'll store URLs only; bucket can come next).
+
+## Confirm before I start
+- OK to **drop existing empty tables** (clients, cases, trademarks, case_phases, payments, agents, assignments, ntn_details, copyright_details, company_details, drive_folders)? They have no rows but I want to confirm.
+- OK that `service_type` on `applications` covers Copyright/Company/NTN with the same stage/timeline workflow (just different filtering), rather than separate tables per type?
