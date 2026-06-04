@@ -14,14 +14,10 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedTrademarkRouteImport } from './routes/_authenticated/trademark'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
-import { Route as AuthenticatedNtnRouteImport } from './routes/_authenticated/ntn'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedCopyrightRouteImport } from './routes/_authenticated/copyright'
-import { Route as AuthenticatedCompanyRouteImport } from './routes/_authenticated/company'
 import { Route as AuthenticatedClientsRouteImport } from './routes/_authenticated/clients'
 import { Route as AuthenticatedAssignmentsRouteImport } from './routes/_authenticated/assignments'
 import { Route as AuthenticatedAgentsRouteImport } from './routes/_authenticated/agents'
@@ -50,11 +46,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedTrademarkRoute = AuthenticatedTrademarkRouteImport.update({
-  id: '/trademark',
-  path: '/trademark',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -70,24 +61,9 @@ const AuthenticatedPaymentsRoute = AuthenticatedPaymentsRouteImport.update({
   path: '/payments',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-const AuthenticatedNtnRoute = AuthenticatedNtnRouteImport.update({
-  id: '/ntn',
-  path: '/ntn',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedCopyrightRoute = AuthenticatedCopyrightRouteImport.update({
-  id: '/copyright',
-  path: '/copyright',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-const AuthenticatedCompanyRoute = AuthenticatedCompanyRouteImport.update({
-  id: '/company',
-  path: '/company',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedClientsRoute = AuthenticatedClientsRouteImport.update({
@@ -115,14 +91,10 @@ export interface FileRoutesByFullPath {
   '/agents': typeof AuthenticatedAgentsRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/clients': typeof AuthenticatedClientsRoute
-  '/company': typeof AuthenticatedCompanyRoute
-  '/copyright': typeof AuthenticatedCopyrightRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/ntn': typeof AuthenticatedNtnRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/trademark': typeof AuthenticatedTrademarkRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -132,14 +104,10 @@ export interface FileRoutesByTo {
   '/agents': typeof AuthenticatedAgentsRoute
   '/assignments': typeof AuthenticatedAssignmentsRoute
   '/clients': typeof AuthenticatedClientsRoute
-  '/company': typeof AuthenticatedCompanyRoute
-  '/copyright': typeof AuthenticatedCopyrightRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/ntn': typeof AuthenticatedNtnRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
-  '/trademark': typeof AuthenticatedTrademarkRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -151,14 +119,10 @@ export interface FileRoutesById {
   '/_authenticated/agents': typeof AuthenticatedAgentsRoute
   '/_authenticated/assignments': typeof AuthenticatedAssignmentsRoute
   '/_authenticated/clients': typeof AuthenticatedClientsRoute
-  '/_authenticated/company': typeof AuthenticatedCompanyRoute
-  '/_authenticated/copyright': typeof AuthenticatedCopyrightRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/ntn': typeof AuthenticatedNtnRoute
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
-  '/_authenticated/trademark': typeof AuthenticatedTrademarkRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -170,14 +134,10 @@ export interface FileRouteTypes {
     | '/agents'
     | '/assignments'
     | '/clients'
-    | '/company'
-    | '/copyright'
     | '/dashboard'
-    | '/ntn'
     | '/payments'
     | '/reports'
     | '/settings'
-    | '/trademark'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -187,14 +147,10 @@ export interface FileRouteTypes {
     | '/agents'
     | '/assignments'
     | '/clients'
-    | '/company'
-    | '/copyright'
     | '/dashboard'
-    | '/ntn'
     | '/payments'
     | '/reports'
     | '/settings'
-    | '/trademark'
   id:
     | '__root__'
     | '/'
@@ -205,14 +161,10 @@ export interface FileRouteTypes {
     | '/_authenticated/agents'
     | '/_authenticated/assignments'
     | '/_authenticated/clients'
-    | '/_authenticated/company'
-    | '/_authenticated/copyright'
     | '/_authenticated/dashboard'
-    | '/_authenticated/ntn'
     | '/_authenticated/payments'
     | '/_authenticated/reports'
     | '/_authenticated/settings'
-    | '/_authenticated/trademark'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -260,13 +212,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/trademark': {
-      id: '/_authenticated/trademark'
-      path: '/trademark'
-      fullPath: '/trademark'
-      preLoaderRoute: typeof AuthenticatedTrademarkRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -288,32 +233,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPaymentsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
-    '/_authenticated/ntn': {
-      id: '/_authenticated/ntn'
-      path: '/ntn'
-      fullPath: '/ntn'
-      preLoaderRoute: typeof AuthenticatedNtnRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/copyright': {
-      id: '/_authenticated/copyright'
-      path: '/copyright'
-      fullPath: '/copyright'
-      preLoaderRoute: typeof AuthenticatedCopyrightRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/company': {
-      id: '/_authenticated/company'
-      path: '/company'
-      fullPath: '/company'
-      preLoaderRoute: typeof AuthenticatedCompanyRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/clients': {
@@ -344,28 +268,20 @@ interface AuthenticatedRouteChildren {
   AuthenticatedAgentsRoute: typeof AuthenticatedAgentsRoute
   AuthenticatedAssignmentsRoute: typeof AuthenticatedAssignmentsRoute
   AuthenticatedClientsRoute: typeof AuthenticatedClientsRoute
-  AuthenticatedCompanyRoute: typeof AuthenticatedCompanyRoute
-  AuthenticatedCopyrightRoute: typeof AuthenticatedCopyrightRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedNtnRoute: typeof AuthenticatedNtnRoute
   AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
-  AuthenticatedTrademarkRoute: typeof AuthenticatedTrademarkRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAgentsRoute: AuthenticatedAgentsRoute,
   AuthenticatedAssignmentsRoute: AuthenticatedAssignmentsRoute,
   AuthenticatedClientsRoute: AuthenticatedClientsRoute,
-  AuthenticatedCompanyRoute: AuthenticatedCompanyRoute,
-  AuthenticatedCopyrightRoute: AuthenticatedCopyrightRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedNtnRoute: AuthenticatedNtnRoute,
   AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
-  AuthenticatedTrademarkRoute: AuthenticatedTrademarkRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
