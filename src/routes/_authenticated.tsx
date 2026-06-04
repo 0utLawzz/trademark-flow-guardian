@@ -12,9 +12,13 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarTrigger,
   SidebarFooter,
 } from "@/components/ui/sidebar";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   LayoutDashboard,
   Users,
@@ -29,6 +33,10 @@ import {
   Settings,
   LogOut,
   Search,
+  FolderKanban,
+  ChevronRight,
+  BookOpen,
+  Landmark,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,21 +53,24 @@ export const Route = createFileRoute("/_authenticated")({
   component: AuthenticatedLayout,
 });
 
-const nav = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/clients", label: "Clients", icon: Users },
-  { to: "/trademark", label: "Trademark", icon: Scale },
-  { to: "/ntn", label: "NTN", icon: FileText },
-  { to: "/copyright", label: "Copyright", icon: Copyright },
-  { to: "/company", label: "Company", icon: Building2 },
+const applicationsSub = [
+  { to: "/applications/trademark", label: "Trademark", icon: Scale },
+  { to: "/applications/copyright", label: "Copyright", icon: Copyright },
+  { to: "/applications/company", label: "Company", icon: Building2 },
+  { to: "/applications/ntn", label: "NTN / Tax Return", icon: FileText },
 ];
 
-const ops = [
+const operations = [
   { to: "/agents", label: "Agents", icon: UserCog },
   { to: "/assignments", label: "Assignments", icon: ClipboardList },
   { to: "/payments", label: "Payments", icon: CreditCard },
   { to: "/reports", label: "Reports", icon: BarChart3 },
-  { to: "/settings", label: "Settings", icon: Settings },
+];
+
+const tools = [
+  { to: "/lookup", label: "Application Lookup", icon: Search },
+  { to: "/journal", label: "Journal", icon: BookOpen },
+  { to: "/ipo", label: "IPO", icon: Landmark },
 ];
 
 function AuthenticatedLayout() {
@@ -69,6 +80,7 @@ function AuthenticatedLayout() {
   const [search, setSearch] = useState("");
 
   const isActive = (to: string) => pathname === to || pathname.startsWith(to + "/");
+  const applicationsOpen = pathname.startsWith("/applications");
 
   const logout = async () => {
     await supabase.auth.signOut();
@@ -80,7 +92,7 @@ function AuthenticatedLayout() {
     e.preventDefault();
     const q = search.trim();
     if (!q) return;
-    navigate({ to: "/trademark", search: { q } as never });
+    navigate({ to: "/lookup", search: { q } as never });
   };
 
   return (
@@ -103,7 +115,57 @@ function AuthenticatedLayout() {
               <SidebarGroupLabel>Workspace</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {nav.map((item) => (
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={isActive("/dashboard")} tooltip="Dashboard">
+                      <Link to="/dashboard">
+                        <LayoutDashboard className="h-4 w-4" />
+                        <span>Dashboard</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={isActive("/clients")} tooltip="Clients">
+                      <Link to="/clients">
+                        <Users className="h-4 w-4" />
+                        <span>Clients</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+
+                  <Collapsible defaultOpen={applicationsOpen} className="group/coll">
+                    <SidebarMenuItem>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton tooltip="Applications" isActive={applicationsOpen}>
+                          <FolderKanban className="h-4 w-4" />
+                          <span>Applications</span>
+                          <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/coll:rotate-90" />
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {applicationsSub.map((item) => (
+                            <SidebarMenuSubItem key={item.to}>
+                              <SidebarMenuSubButton asChild isActive={isActive(item.to)}>
+                                <Link to={item.to}>
+                                  <item.icon className="h-3.5 w-3.5" />
+                                  <span>{item.label}</span>
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </SidebarMenuItem>
+                  </Collapsible>
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+
+            <SidebarGroup>
+              <SidebarGroupLabel>Operations</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {operations.map((item) => (
                     <SidebarMenuItem key={item.to}>
                       <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={item.label}>
                         <Link to={item.to}>
@@ -116,11 +178,12 @@ function AuthenticatedLayout() {
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
+
             <SidebarGroup>
-              <SidebarGroupLabel>Operations</SidebarGroupLabel>
+              <SidebarGroupLabel>Tools</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {ops.map((item) => (
+                  {tools.map((item) => (
                     <SidebarMenuItem key={item.to}>
                       <SidebarMenuButton asChild isActive={isActive(item.to)} tooltip={item.label}>
                         <Link to={item.to}>
@@ -130,6 +193,14 @@ function AuthenticatedLayout() {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   ))}
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={isActive("/settings")} tooltip="Settings">
+                      <Link to="/settings">
+                        <Settings className="h-4 w-4" />
+                        <span>Settings</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
@@ -155,7 +226,7 @@ function AuthenticatedLayout() {
                 <Input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search trademark, application, client code, applicant…"
+                  placeholder="Lookup by trademark number…"
                   className="pl-9 h-9 bg-background"
                 />
               </div>
@@ -172,4 +243,3 @@ function AuthenticatedLayout() {
     </SidebarProvider>
   );
 }
-

@@ -14,455 +14,26 @@ export type Database = {
   }
   public: {
     Tables: {
-      agents: {
-        Row: {
-          agent_name: string
-          created_at: string
-          email: string | null
-          id: string
-          notes: string | null
-          phone: string | null
-          updated_at: string
-        }
-        Insert: {
-          agent_name: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-        }
-        Update: {
-          agent_name?: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      assignments: {
-        Row: {
-          agent_id: string
-          assigned_date: string
-          case_id: string
-          completion_date: string | null
-          created_at: string
-          id: string
-          remarks: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          agent_id: string
-          assigned_date?: string
-          case_id: string
-          completion_date?: string | null
-          created_at?: string
-          id?: string
-          remarks?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          agent_id?: string
-          assigned_date?: string
-          case_id?: string
-          completion_date?: string | null
-          created_at?: string
-          id?: string
-          remarks?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "assignments_agent_id_fkey"
-            columns: ["agent_id"]
-            isOneToOne: false
-            referencedRelation: "agents"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assignments_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: false
-            referencedRelation: "cases"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      case_phases: {
-        Row: {
-          case_id: string
-          completed_at: string | null
-          id: string
-          payment_clear: boolean
-          phase_number: number
-          phase_status: string
-          remarks: string | null
-          started_at: string
-          updated_at: string
-        }
-        Insert: {
-          case_id: string
-          completed_at?: string | null
-          id?: string
-          payment_clear?: boolean
-          phase_number: number
-          phase_status?: string
-          remarks?: string | null
-          started_at?: string
-          updated_at?: string
-        }
-        Update: {
-          case_id?: string
-          completed_at?: string | null
-          id?: string
-          payment_clear?: boolean
-          phase_number?: number
-          phase_status?: string
-          remarks?: string | null
-          started_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "case_phases_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: false
-            referencedRelation: "cases"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cases: {
-        Row: {
-          case_number: string
-          case_type: Database["public"]["Enums"]["case_type"]
-          client_id: string
-          created_at: string
-          id: string
-          notes: string | null
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          case_number: string
-          case_type: Database["public"]["Enums"]["case_type"]
-          client_id: string
-          created_at?: string
-          id?: string
-          notes?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          case_number?: string
-          case_type?: Database["public"]["Enums"]["case_type"]
-          client_id?: string
-          created_at?: string
-          id?: string
-          notes?: string | null
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cases_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clients: {
-        Row: {
-          client_code: string
-          client_name: string
-          created_at: string
-          email: string | null
-          id: string
-          notes: string | null
-          phone: string | null
-          updated_at: string
-        }
-        Insert: {
-          client_code: string
-          client_name: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-        }
-        Update: {
-          client_code?: string
-          client_name?: string
-          created_at?: string
-          email?: string | null
-          id?: string
-          notes?: string | null
-          phone?: string | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      company_details: {
-        Row: {
-          case_id: string
-          company_name: string | null
-          created_at: string
-          directors: string | null
-          id: string
-          incorporation_date: string | null
-          incorporation_number: string | null
-          registered_address: string | null
-          remarks: string | null
-          updated_at: string
-        }
-        Insert: {
-          case_id: string
-          company_name?: string | null
-          created_at?: string
-          directors?: string | null
-          id?: string
-          incorporation_date?: string | null
-          incorporation_number?: string | null
-          registered_address?: string | null
-          remarks?: string | null
-          updated_at?: string
-        }
-        Update: {
-          case_id?: string
-          company_name?: string | null
-          created_at?: string
-          directors?: string | null
-          id?: string
-          incorporation_date?: string | null
-          incorporation_number?: string | null
-          registered_address?: string | null
-          remarks?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "company_details_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: true
-            referencedRelation: "cases"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      copyright_details: {
-        Row: {
-          author_name: string | null
-          case_id: string
-          created_at: string
-          id: string
-          publication_date: string | null
-          registration_number: string | null
-          remarks: string | null
-          updated_at: string
-          work_title: string | null
-          work_type: string | null
-        }
-        Insert: {
-          author_name?: string | null
-          case_id: string
-          created_at?: string
-          id?: string
-          publication_date?: string | null
-          registration_number?: string | null
-          remarks?: string | null
-          updated_at?: string
-          work_title?: string | null
-          work_type?: string | null
-        }
-        Update: {
-          author_name?: string | null
-          case_id?: string
-          created_at?: string
-          id?: string
-          publication_date?: string | null
-          registration_number?: string | null
-          remarks?: string | null
-          updated_at?: string
-          work_title?: string | null
-          work_type?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "copyright_details_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: true
-            referencedRelation: "cases"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      drive_folders: {
-        Row: {
-          case_id: string | null
-          client_id: string | null
-          created_at: string
-          folder_name: string
-          folder_number: string | null
-          google_drive_folder_id: string
-          google_drive_link: string | null
-          id: string
-        }
-        Insert: {
-          case_id?: string | null
-          client_id?: string | null
-          created_at?: string
-          folder_name: string
-          folder_number?: string | null
-          google_drive_folder_id: string
-          google_drive_link?: string | null
-          id?: string
-        }
-        Update: {
-          case_id?: string | null
-          client_id?: string | null
-          created_at?: string
-          folder_name?: string
-          folder_number?: string | null
-          google_drive_folder_id?: string
-          google_drive_link?: string | null
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "drive_folders_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: false
-            referencedRelation: "cases"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "drive_folders_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      ntn_details: {
-        Row: {
-          business_address: string | null
-          business_type: string | null
-          case_id: string
-          created_at: string
-          filing_date: string | null
-          id: string
-          ntn_number: string | null
-          registration_name: string | null
-          remarks: string | null
-          updated_at: string
-        }
-        Insert: {
-          business_address?: string | null
-          business_type?: string | null
-          case_id: string
-          created_at?: string
-          filing_date?: string | null
-          id?: string
-          ntn_number?: string | null
-          registration_name?: string | null
-          remarks?: string | null
-          updated_at?: string
-        }
-        Update: {
-          business_address?: string | null
-          business_type?: string | null
-          case_id?: string
-          created_at?: string
-          filing_date?: string | null
-          id?: string
-          ntn_number?: string | null
-          registration_name?: string | null
-          remarks?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "ntn_details_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: true
-            referencedRelation: "cases"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      payments: {
-        Row: {
-          amount: number | null
-          case_id: string
-          created_at: string
-          id: string
-          payment_clear: boolean
-          payment_date: string | null
-          payment_required: boolean
-          phase_number: number
-          remarks: string | null
-          updated_at: string
-        }
-        Insert: {
-          amount?: number | null
-          case_id: string
-          created_at?: string
-          id?: string
-          payment_clear?: boolean
-          payment_date?: string | null
-          payment_required?: boolean
-          phase_number: number
-          remarks?: string | null
-          updated_at?: string
-        }
-        Update: {
-          amount?: number | null
-          case_id?: string
-          created_at?: string
-          id?: string
-          payment_clear?: boolean
-          payment_date?: string | null
-          payment_required?: boolean
-          phase_number?: number
-          remarks?: string | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "payments_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: false
-            referencedRelation: "cases"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      trademarks: {
+      applications: {
         Row: {
           applicant_address: string | null
           applicant_name: string | null
-          application_address: string | null
-          application_class: string | null
+          applicant_type: string | null
           application_name: string | null
-          assigning_type: string | null
-          case_id: string
+          attorney_id: string | null
+          city: string | null
+          class: string[] | null
+          client_id: string
           created_at: string
-          current_phase: number
-          folder_number: string | null
-          google_drive_link: string | null
+          current_stage: number
+          folder_number: string
           id: string
+          is_complete: boolean
+          last_operation_date: string | null
+          logo_url: string | null
+          mark_description: string | null
+          service_type: string
+          sub_status: string | null
           trademark_number: string | null
           trading_as: string | null
           updated_at: string
@@ -470,16 +41,22 @@ export type Database = {
         Insert: {
           applicant_address?: string | null
           applicant_name?: string | null
-          application_address?: string | null
-          application_class?: string | null
+          applicant_type?: string | null
           application_name?: string | null
-          assigning_type?: string | null
-          case_id: string
+          attorney_id?: string | null
+          city?: string | null
+          class?: string[] | null
+          client_id: string
           created_at?: string
-          current_phase?: number
-          folder_number?: string | null
-          google_drive_link?: string | null
+          current_stage?: number
+          folder_number: string
           id?: string
+          is_complete?: boolean
+          last_operation_date?: string | null
+          logo_url?: string | null
+          mark_description?: string | null
+          service_type?: string
+          sub_status?: string | null
           trademark_number?: string | null
           trading_as?: string | null
           updated_at?: string
@@ -487,26 +64,312 @@ export type Database = {
         Update: {
           applicant_address?: string | null
           applicant_name?: string | null
-          application_address?: string | null
-          application_class?: string | null
+          applicant_type?: string | null
           application_name?: string | null
-          assigning_type?: string | null
-          case_id?: string
+          attorney_id?: string | null
+          city?: string | null
+          class?: string[] | null
+          client_id?: string
           created_at?: string
-          current_phase?: number
-          folder_number?: string | null
-          google_drive_link?: string | null
+          current_stage?: number
+          folder_number?: string
           id?: string
+          is_complete?: boolean
+          last_operation_date?: string | null
+          logo_url?: string | null
+          mark_description?: string | null
+          service_type?: string
+          sub_status?: string | null
           trademark_number?: string | null
           trading_as?: string | null
           updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "trademarks_case_id_fkey"
-            columns: ["case_id"]
-            isOneToOne: true
-            referencedRelation: "cases"
+            foreignKeyName: "applications_attorney_id_fkey"
+            columns: ["attorney_id"]
+            isOneToOne: false
+            referencedRelation: "attorneys"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "applications_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assignments: {
+        Row: {
+          agent_name: string
+          application_id: string
+          assigned_date: string
+          city: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          agent_name: string
+          application_id: string
+          assigned_date?: string
+          city?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          agent_name?: string
+          application_id?: string
+          assigned_date?: string
+          city?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignments_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attorneys: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      clients: {
+        Row: {
+          address: string | null
+          city: string | null
+          client_code: number
+          client_name: string
+          client_prefix: string
+          created_at: string
+          id: string
+          trading_as: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          client_code: number
+          client_name: string
+          client_prefix?: string
+          created_at?: string
+          id?: string
+          trading_as?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          client_code?: number
+          client_name?: string
+          client_prefix?: string
+          created_at?: string
+          id?: string
+          trading_as?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ipo_entries: {
+        Row: {
+          application_name: string | null
+          class: string | null
+          created_at: string
+          entry_date: string | null
+          id: string
+          notes: string | null
+          status: string | null
+          trademark_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          application_name?: string | null
+          class?: string | null
+          created_at?: string
+          entry_date?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          trademark_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          application_name?: string | null
+          class?: string | null
+          created_at?: string
+          entry_date?: string | null
+          id?: string
+          notes?: string | null
+          status?: string | null
+          trademark_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      journal_entries: {
+        Row: {
+          application_name: string | null
+          class: string | null
+          created_at: string
+          id: string
+          journal_date: string | null
+          journal_no: string | null
+          notes: string | null
+          trademark_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          application_name?: string | null
+          class?: string | null
+          created_at?: string
+          id?: string
+          journal_date?: string | null
+          journal_no?: string | null
+          notes?: string | null
+          trademark_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          application_name?: string | null
+          class?: string | null
+          created_at?: string
+          id?: string
+          journal_date?: string | null
+          journal_no?: string | null
+          notes?: string | null
+          trademark_number?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      stage_payments: {
+        Row: {
+          amount: number | null
+          application_id: string
+          created_at: string
+          id: string
+          notes: string | null
+          payment_date: string | null
+          payment_status: string
+          stage: number
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          application_id: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string | null
+          payment_status?: string
+          stage: number
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          application_id?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_date?: string | null
+          payment_status?: string
+          stage?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_payments_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stage_updates: {
+        Row: {
+          application_id: string
+          created_at: string
+          created_by: string | null
+          file_url: string | null
+          hearing_date: string | null
+          id: string
+          journal_no: string | null
+          notes: string | null
+          stage: number
+          status: string
+          tcs_tracking: string | null
+          update_date: string
+        }
+        Insert: {
+          application_id: string
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          hearing_date?: string | null
+          id?: string
+          journal_no?: string | null
+          notes?: string | null
+          stage: number
+          status: string
+          tcs_tracking?: string | null
+          update_date?: string
+        }
+        Update: {
+          application_id?: string
+          created_at?: string
+          created_by?: string | null
+          file_url?: string | null
+          hearing_date?: string | null
+          id?: string
+          journal_no?: string | null
+          notes?: string | null
+          stage?: number
+          status?: string
+          tcs_tracking?: string | null
+          update_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_updates_application_id_fkey"
+            columns: ["application_id"]
+            isOneToOne: false
+            referencedRelation: "applications"
             referencedColumns: ["id"]
           },
         ]
@@ -540,7 +403,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      generate_client_code: { Args: never; Returns: string }
+      generate_folder_number: { Args: { p_client_id: string }; Returns: string }
     }
     Enums: {
       case_type: "trademark" | "ntn" | "copyright" | "company"
