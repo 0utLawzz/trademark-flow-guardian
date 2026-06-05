@@ -1,0 +1,93 @@
+/* Glass‑card (already used) */
+.glass-card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+    padding: 1.5rem;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Table */
+.table-case {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-case th,
+.table-case td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-case tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Action icons */
+.action-icon {
+    cursor: pointer;
+    color: #bbb;
+    transition: color .2s, transform .2s;
+}
+
+.action-icon:hover {
+    color: #00bcd4;
+    transform: scale(1.1);
+}
+
+/* Modal overlay (simple) */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* Basic input/button utilities (replace with your UI lib if you have one) */
+.input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    color: #fff;
+    padding: 0.5rem 0.75rem;
+}
+
+.btn {
+    background: #0066ff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.btn:hover {
+    background: #0055dd;
+}
+
+.btn-primary {
+    background: #0066ff;
+}
+
+/* Hide UI controls when printing */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    .glass-card {
+        background: transparent;
+        box-shadow: none;
+    }
+}

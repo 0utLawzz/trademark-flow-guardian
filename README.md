@@ -54,6 +54,16 @@ Deploy the `dist/` folder to any static‑hosting provider (Vercel, Netlify, Git
 - Push changes: the repository includes a **post‑commit hook** that automatically pushes the current branch to GitHub after each commit.
 - Open a Pull Request on GitHub.
 
+## Client‑Group Dashboard
+
+The application now includes a **Client‑Group** section where you can:
+
+- Select a client group (data is fetched from Supabase).
+- View all cases belonging to that group, with status, journal number, TM number, and assignment details.
+- Assign a case to a user (Code, Name, City) via a modal.
+- Filter by *Journal No*, *TM No*, or free‑text search.
+- Print the case list or export it as a PDF (brand logo, address, contact & payment details are displayed in the report).
+
 ## Contributing
 
 Please read the [Git Guide](docs/GIT_GUIDE.md) for contribution standards and commit‑message conventions.
